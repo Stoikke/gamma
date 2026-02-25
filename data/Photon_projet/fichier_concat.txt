@@ -1,0 +1,5 @@
+data/Photon_projet/lat_photon_weekly_w443_p305_v001.fits
+data/Photon_projet/lat_photon_weekly_w444_p305_v001.fits
+data/Photon_projet/lat_photon_weekly_w445_p305_v001.fits
+data/Photon_projet/lat_photon_weekly_w446_p305_v001.fits
+data/Photon_projet/lat_photon_weekly_w447_p305_v001.fits

@@ -1,0 +1,24 @@
+| Bin | Emin (MeV) | Emax (MeV) | Centre géom. (MeV) |
+| --- | ---------- | ---------- | ------------------ |
+| 1   | 100.0      | 199.5      | 141.3              |
+| 2   | 199.5      | 398.1      | 281.8              |
+| 3   | 398.1      | 794.3      | 562.3              |
+| 4   | 794.3      | 1 584.9    | 1 122.0            |
+| 5   | 1 584.9    | 3 162.3    | 2 238.7            |
+| 6   | 3 162.3    | 6 309.6    | 4 466.8            |
+| 7   | 6 309.6    | 12 589.3   | 8 912.5            |
+| 8   | 12 589.3   | 25 118.9   | 17 782.8           |
+| 9   | 25 118.9   | 50 118.7   | 35 481.3           |
+| 10  | 50 118.7   | 100 000.0  | 70 794.6           |
+
+SED_output/gtbin/gt_bin_activite_1_100_199.5.fits
+SED_output/gtbin/gt_bin_activite_1_199.5_398.1.fits
+SED_output/gtbin/gt_bin_activite_1_398.1_794.3.fits
+SED_output/gtbin/gt_bin_activite_1_794.4_1584.9.fits
+SED_output/gtbin/gt_bin_activite_1_1584.9_3162.3.fits
+SED_output/gtbin/gt_bin_activite_1_3162.3_6309.6.fits
+SED_output/gtbin/gt_bin_activite_1_6309.6_12589.3.fits
+SED_output/gtbin/gt_bin_activite_1_12589.3_25118.9.fits
+SED_output/gtbin/gt_bin_activite_1_25118.9_50118.7.fits
+SED_output/gtbin/gt_bin_activite_1_50118.7_100000.fits
+
