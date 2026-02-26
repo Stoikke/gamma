@@ -85,7 +85,7 @@ for fichier in fichiers:
     flux_err  = np.sqrt(np.sum(flux_unc**2)) / N
 
     # ── dPhi/dE [ph cm⁻² s⁻¹ MeV⁻¹]
-    dphi_dE     = flux_mean / dE
+    dphi_dE     = flux_mean / dE 
     dphi_dE_err = flux_err  / dE
 
     energies_mean.append(emean)
