@@ -2,14 +2,14 @@
 # $Header: /nfs/slac/g/glast/ground/cvs/ScienceTools-scons/dataSubselector/pfiles/gtselect.par,v 1.26 2015/01/08 16:46:22 jchiang Exp $
 #
 infile,f,a,"data/Photon_projet/lat_photon_weekly_all.fits",,,"Input FT1 file"
-outfile,f,a,"results_simple/selected_region.fits",,,"Output FT1 file"
-ra,r,a,338.1918,0,360,RA for new search center (degrees)
-dec,r,a,11.764375,-90,90,Dec for new search center (degrees)
-rad,r,a,4,0,180,radius of new search region (degrees)
-tmin,r,a,501643824,0,,start time (MET in s)
-tmax,r,a,504661409,0,,end time (MET in s)
-emin,r,a,100,0,,lower energy limit (MeV)
-emax,r,a,100000,0,,upper energy limit (MeV)
+outfile,f,a,"results_simple/selected_region_fond_3_11774.08_20000.fits",,,"Output FT1 file"
+ra,r,a,324,0,360,RA for new search center (degrees)
+dec,r,a,-3,-90,90,Dec for new search center (degrees)
+rad,r,a,10,0,180,radius of new search region (degrees)
+tmin,r,a,503377224,0,,start time (MET in s)
+tmax,r,a,503593224,0,,end time (MET in s)
+emin,r,a,11774.08,0,,lower energy limit (MeV)
+emax,r,a,20000,0,,upper energy limit (MeV)
 zmin,r,h,0,0,180,minimum zenith angle value (degrees)
 zmax,r,a,90,0,180,maximum zenith angle value (degrees)
 evclass,i,h,INDEF,0,31,"Event class selection"

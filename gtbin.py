@@ -11,7 +11,7 @@ import subprocess
 # 1. CONFIGURATION MANUELLE
 # ==============================================================================
 
-FT1_FILE        = "results_simple/selected_region.fits"
+FT1_FILE        = "results_simple/fond_3.fits" #selected_region choisir le fichier ft1 à utiliser (fond_3 ou slected_region) pour faire les gtbin et gtexposure
 FT2_FILE        = "data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits"
 OUTPUT_BASE_DIR = "SED_output"
 
@@ -83,11 +83,22 @@ def build_lc_and_exposure(dry_run: bool = False):
         print(f"{'='*70}")
 
         for emin, emax in ENERGY_BINS:
-            lc_name = f"gt_bin_{tlabel}_{fmt(emin)}_{fmt(emax)}.fits"
+            lc_name = f"gt_bin_fond_3_{fmt(emin)}_{fmt(emax)}.fits"#{tlabel} a remplacer lorsque on est pas sur le fond
+            lc_name_gtselect = f"gtselect_{
             lc_path = os.path.join(gtbin_dir, lc_name)
-
+            lc_path_gtselect = os.path.join(gtbin_dir, f"gtselect_{lc_name}")
             print(f"\n  Bin : [{emin} – {emax}] MeV  →  {lc_name}")
-
+            # ── gtselect (LC) ────────────────────────────────────────────────────
+            print("  → gtselect (LC)")
+            run_cmd([
+                "gtselect",
+                f"infile={FT1_FILE}",
+                f"outfile={lc_path_gtselect}",
+                f"ra=0", f"dec=0", f"rad=180",  # sélectionne tout le ciel
+                f"tmin={tstart}", f"tmax={tstop}",
+                f"emin={emin}", f"emax={emax}",
+                "zmax=90",  # angle de zenith max pour éviter la Terre
+            ], dry_run=dry_run)
             # ── gtbin (LC) ────────────────────────────────────────────────────
             print("  → gtbin (LC)")
             run_cmd([
