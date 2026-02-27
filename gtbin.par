@@ -1,8 +1,8 @@
 #-------------------------------------------------------------------------------
 # General parameters.
-evfile,        f, a, "results_simple/selected_region_fond_3_11774.08_20000.fits", , , "Event data file name"
+evfile,        f, a, "results_simple/selected_region_activite_1_14048.44_20000.fits", , , "Event data file name"
 scfile,        f, a, "data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits", , , "Spacecraft data file name"
-outfile,       f, a, "SED_output/gtbin/gt_bin_activite_1_fond_3_11774.08_20000.fits", , , "Output file name"
+outfile,       f, a, "SED_output/gtbin/gt_bin_activite_1_14048.44_20000.fits", , , "Output file name"
 algorithm,     s, a, "LC", CCUBE|CMAP|LC|PHA1|PHA2|HEALPIX, , "Type of output file"
 #-------------------------------------------------------------------------------
 

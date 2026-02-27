@@ -10,14 +10,15 @@ import argparse
 # 0. PARAMÈTRES PAR DÉFAUT
 # ==============================================================================
 
-DEFAULT_RA     = 324  #  valeur pour la source 338.1849
-DEFAULT_DEC    = -3 # valeur pour la source 11.718641
-DEFAULT_RAD    = 10 # valeurs pour la source 4
+DEFAULT_RA     = 338.1849  #  338valeur pour la source 
+DEFAULT_DEC    = 11.718641 # -3 valeur pour la source 
+DEFAULT_RAD    = 4 # valeurs pour la source 4
 DEFAULT_ZMAX   = 90.0
 INPUT_FITS     = "data/Photon_projet/lat_photon_weekly_all.fits"
 FT2_FILE       = "data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits"
 RESULTS_DIR    = "results_simple"
 OUTPUT_BASE_DIR = "SED_output"
+name_of_region = "activite_1" # fond_1 à modifier pour la source ou les autres fonds 
 
 TIME_INTERVALS = [
     (5.03377224e+08, 5.03593224e+08, "activite_1"),
@@ -29,17 +30,23 @@ IRFS         = "CALDB"
 SRC_MODEL    = "none"
 
 ENERGY_BINS = [
-    ( 100.0,    169.86),
-    ( 169.86,   288.54),
-    ( 288.54,   490.13),
-    ( 490.13,   832.5),
-    ( 832.5,   1414.21),
-    (1414.21,  2402.25),
-    (2402.25,  4080.57),
-    (4080.57,  6931.45),
-    (6931.45, 11774.08),
-    (11774.08, 20000.0),
+    (    100.00,     142.36),
+    (    142.36,     202.68),
+    (    202.68,     288.54),
+    (    288.54,     410.78),
+    (    410.78,     584.80),
+    (    584.80,     832.55),
+    (    832.55,    1185.26),
+    (   1185.26,    1687.39),
+    (   1687.39,    2402.25),
+    (   2402.25,    3419.95),
+    (   3419.95,    4868.80),
+    (   4868.80,    6931.45),
+    (   6931.45,    9867.93),
+    (   9867.93,   14048.44),
+    (  14048.44,   20000.00),
 ]
+
 
 # ==============================================================================
 # 1. UTILITAIRES
@@ -81,7 +88,7 @@ def run_gtselect(ra, dec, rad, dry_run: bool = False):
 
     for tstart, tstop, tlabel in TIME_INTERVALS:
         for emin, emax in ENERGY_BINS:
-            out_name = f"selected_region_fond_3_{fmt(emin)}_{fmt(emax)}.fits" # attention a bien prendre le bon nom
+            out_name = f"selected_region_{name_of_region}_{fmt(emin)}_{fmt(emax)}.fits" # attention a bien prendre le bon nom
             out_path = os.path.join(RESULTS_DIR, out_name)
 
             print(f"  [{emin} – {emax}] MeV")
@@ -113,7 +120,7 @@ def build_lc_and_exposure(gtselect_files: dict, prefix: str, dry_run: bool = Fal
     for (tlabel, emin, emax), ft1_file in gtselect_files.items():
         tstart, tstop, _ = next(t for t in TIME_INTERVALS if t[2] == tlabel)
 
-        lc_name = f"{prefix}_fond_3_{fmt(emin)}_{fmt(emax)}.fits" #  modifier lorsque on fait le fond ou la source
+        lc_name = f"{prefix}_{fmt(emin)}_{fmt(emax)}.fits" #  _{name_of_region} modifier lorsque on fait le fond ou la source
         lc_path = os.path.join(gtbin_dir, lc_name)
 
         print(f"\n{'='*50}")
