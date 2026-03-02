@@ -152,52 +152,104 @@ Dx_valid   = dE_half_arr[masque_valid]
 if len(E_valid) == 0:
     raise ValueError("Aucun point valide après soustraction fond.")
 
-
 def loi_puissance_log(logE, alpha, logN0):
     return alpha * logE + logN0
+
+def loi_puissance_odr(params, x):
+    alpha, logN0 = params
+    return alpha * x + logN0
 
 logE     = np.log10(E_valid)
 logF     = np.log10(F_valid)
 logF_err = Ferr_valid / (F_valid * np.log(10))
+logE_err = Dx_valid   / (E_valid * np.log(10))   # erreur en x en log
 
-
-# --- Définir la fonction pour ODR (params en premier, x en second) ---
-def loi_puissance_odr(params, x):
-    alpha, logN0 = params
-    return alpha * x + logN0  # identique à loi_puissance_log
-
-# --- Fit ODR avec erreurs en X et Y ---
+# ==============================================================================
+# FIT ODR
+# ==============================================================================
 model   = Model(loi_puissance_odr)
-data    = RealData(logE, logF, sx=Dx_valid, sy=logF_err)
-odr_fit = ODR(data, model, beta0=[-2.0, -10.0])  # estimation initiale
+data_odr = RealData(logE, logF, sx=logE_err, sy=logF_err)
+odr_fit = ODR(data_odr, model, beta0=[-2.0, -10.0])
 result  = odr_fit.run()
 
 alpha, logN0 = result.beta
-perr         = result.sd_beta
+perr_odr     = result.sd_beta
 
-print(f"=== FIT LOI DE PUISSANCE ODR (signal - fond) ===")
-print(f"  Indice spectral  alpha = {alpha:.3f} ± {perr[0]:.3f}")
-print(f"  log10(N0)              = {logN0:.3f} ± {perr[1]:.3f}")
-print(f"  N0                     = {10**logN0:.3e}")
-masque_valid = (flux_moyens > 0) & (flux_erreurs > 0) #& (flux_erreurs < flux_moyens)
+print("=== FIT ODR ===")
+print(f"  alpha  = {alpha:.3f} ± {perr_odr[0]:.3f}")
+print(f"  logN0  = {logN0:.3f} ± {perr_odr[1]:.3f}")
+print(f"  N0     = {10**logN0:.3e}")
+
+# ==============================================================================
+# MONTE-CARLO : tirages gaussiens sur barres d'erreur X et Y
+# ==============================================================================
+N_MC = 100000
+rng  = np.random.default_rng(42)
+
+alpha_mc = np.empty(N_MC)
+logN0_mc = np.empty(N_MC)
+
+for k in range(N_MC):
+    # Tirage gaussien sur logF (erreur Y) et logE (erreur X)
+    logF_mc = logF + rng.standard_normal(len(logF)) * logF_err
+    logE_mc = logE + rng.standard_normal(len(logE)) * logE_err
+
+    try:
+        data_mc = RealData(logE_mc, logF_mc, sx=logE_err, sy=logF_err)
+        odr_mc  = ODR(data_mc, model, beta0=[alpha, logN0])
+        res_mc  = odr_mc.run()
+        alpha_mc[k], logN0_mc[k] = res_mc.beta
+    except Exception:
+        alpha_mc[k], logN0_mc[k] = np.nan, np.nan
+
+# Filtrage des runs divergents
+valid_mc  = np.isfinite(alpha_mc) & np.isfinite(logN0_mc)
+alpha_mc  = alpha_mc[valid_mc]
+logN0_mc  = logN0_mc[valid_mc]
+
+alpha_mc_mean = np.mean(alpha_mc)
+alpha_mc_std  = np.std(alpha_mc,  ddof=1)
+logN0_mc_mean = np.mean(logN0_mc)
+logN0_mc_std  = np.std(logN0_mc,  ddof=1)
+
+print(f"\n=== MONTE-CARLO ({N_MC} tirages, {valid_mc.sum()} valides) ===")
+print(f"  alpha  = {alpha_mc_mean:.3f} ± {alpha_mc_std:.3f}  (1σ MC)")
+print(f"  logN0  = {logN0_mc_mean:.3f} ± {logN0_mc_std:.3f}  (1σ MC)")
+print(f"  N0     = {10**logN0_mc_mean:.3e}")
+
+# ==============================================================================
+# COURBE + ENVELOPPE MC
+# ==============================================================================
+masque_valid = (flux_moyens > 0) & (flux_erreurs > 0)
 
 E_valid    = energies_mean[masque_valid]
 F_valid    = flux_moyens[masque_valid]
 Ferr_valid = flux_erreurs[masque_valid]
 Dx_valid   = dE_half_arr[masque_valid]
-# --- Courbe du fit ---
-E_fit = np.logspace(np.log10(E_valid.min()), np.log10(E_valid.max()), 300)
-F_fit = 10**(loi_puissance_odr([alpha, logN0], np.log10(E_fit)))
 
-label_fit = r"Loi de puissance : $\alpha=" + f"{alpha:.2f}\\pm{perr[0]:.2f}$"
+E_fit  = np.logspace(np.log10(E_valid.min()), np.log10(E_valid.max()), 300)
+F_fit  = 10**(loi_puissance_odr([alpha, logN0], np.log10(E_fit)))
 
-# --- Figure ---
+
+# ==============================================================================
+# FIGURE
+# ==============================================================================
 fig, ax = plt.subplots(figsize=(10, 6))
-# Séparer les points "détectés" (S/N > 1) et les "upper limits" (S/N <= 1)
-mask_det = F_valid > 1 * Ferr_valid   # points bien détectés
-mask_ul  = ~mask_det                   # upper limits
 
-# --- Points détectés normalement ---
+# ── Courbes MC ────────────────────────────────────────────────────────────────
+N_PLOT   = 1000
+idx_plot = np.random.choice(len(alpha_mc), size=N_PLOT, replace=False)
+
+for i, k in enumerate(idx_plot):
+    ax.plot(E_fit,
+            10**(loi_puissance_odr([alpha_mc[k], logN0_mc[k]], np.log10(E_fit))),
+            color="red", alpha=0.01, linewidth=0.5,
+            label="Réalisations MC" if i == 0 else None)
+
+# ── Données ───────────────────────────────────────────────────────────────────
+mask_det = F_valid > 1 * Ferr_valid
+mask_ul  = ~mask_det
+
 if mask_det.any():
     ax.errorbar(E_valid[mask_det], F_valid[mask_det],
                 yerr=np.abs(Ferr_valid[mask_det]),
@@ -205,21 +257,20 @@ if mask_det.any():
                 fmt="o", color="steelblue", capsize=4,
                 label="Signal - Fond")
 
-# --- Upper limits (flèches vers le bas) ---
 if mask_ul.any():
-    ul_values = 3 * Ferr_valid[mask_ul]  # upper limit = 3 sigma
+    ul_values = 3 * Ferr_valid[mask_ul]
     ax.errorbar(E_valid[mask_ul], ul_values,
                 xerr=Dx_valid[mask_ul],
-                yerr=ul_values * 0.3,     # longueur de la flèche
+                yerr=ul_values * 0.3,
                 fmt="o", color="steelblue",
-                uplims=True,              # transforme en flèche vers le bas
-                capsize=4, alpha=0.6,
+                uplims=True, capsize=4, alpha=0.6,
                 label="Upper limit (3σ)")
 
-if len(fond_flux_moyens) > 0:
-    E_fond  = np.array(list(fond_flux_moyens.keys()))
-    F_fond  = np.array(list(fond_flux_moyens.values()))
-    Dx_fond = np.array([fond_dE_half[e] for e in E_fond])
+# ── Fit central ───────────────────────────────────────────────────────────────
+label_fit = (r"Fit : $\alpha=" + f"{alpha:.2f}" +
+             r" \pm " + f"{alpha_mc_std:.2f}$"  +
+             r"  $\log_{10}(N_0)=" + f"{logN0:.2f}" +
+             r" \pm " + f"{logN0_mc_std:.2f}$")
 
 ax.plot(E_fit, F_fit, "r-", linewidth=2, label=label_fit)
 
@@ -231,6 +282,5 @@ ax.set_title(f"SED — Activité {activite} (GRB cat102, fond soustrait)")
 ax.legend()
 ax.grid(True, alpha=0.3)
 
-plt.savefig(f"SED_activite_{activite}_net_xerr.png", dpi=150, bbox_inches="tight")
+plt.savefig(f"SED_activite_{activite}_net_MC.png", dpi=150, bbox_inches="tight")
 plt.show()
-print(f"SED nette sauvegardée : SED_activite_{activite}_net_xerr.png")

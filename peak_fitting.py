@@ -12,7 +12,7 @@ filename = "results_simple/gtbin_selected_region_6h_bin.fits"
 
 # Fenêtre temporelle pour zoomer sur la zone d'intérêt
 T_MIN = 5.03277224e+08# 501643824.0 
-T_MAX =503660000.0  #5.03593224e+08
+T_MAX = 503660000.0  #5.03593224e+08
 
 # =====================================================
 # LECTURE FITS
@@ -139,6 +139,6 @@ ax.set_title(f"Courbe de lumière — fit {N_FLARES} peak(s)")
 ax.legend()
 ax.grid(True, alpha=0.3)
 
-plt.savefig("light_curve_fit.png", dpi=150, bbox_inches="tight")
+plt.savefig("light_curve_fit_3h.png", dpi=150, bbox_inches="tight")
 plt.show()
 print("\nFigure sauvegardée : light_curve_fit.png")
