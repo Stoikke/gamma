@@ -9,7 +9,7 @@ from scipy.optimize import curve_fit
 # =====================================================
 N_MC = 1000
 
-filename       = "results_simple/gtbin_selected_region_9h_bin.fits"
+filename       = "results_simple/lat_photon_flare1article_selected_radius4_LC_p6h.fits"
 filenames_fond = [
     "SED_output/FOND_peak/gt_bin_activite_1_fond_1_100_20000.fits",
     "SED_output/FOND_peak/gt_bin_activite_1_fond_2_100_20000.fits",

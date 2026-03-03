@@ -20,8 +20,8 @@ filenames_fond = [
 T_MIN = 503280004+13*3600  # 5.03277224e+08
 T_MAX = 503280004+4*86400
 PEAK_TIME_CONSTRAINTS = [
-    (5.033985e+8, 5.033327e+08, 5.034666e+08),   # Peak 1
-    (5.035719e+08, 5.034866e+08, 5.036153e+08),   # Peak 2
+    (5.033991e+8, 5.033304e+08, 5.034909e+08),   # Peak 1
+    (5.035638e+08, 5.034482e+08, 5.036444e+08),   # Peak 2
 ]
 
 # =====================================================
@@ -166,9 +166,9 @@ for k in range(N_MC):
 valid_mc   = np.all(np.isfinite(mc_params), axis=1)
 mc_params  = mc_params[valid_mc]
 print(f"  {mc_params.shape[0]}/{N_MC} fits MC valides")
-print(len(mc_params[0]))
+
 # Incertitudes MC par paramètre
-mc_std = np.std(mc_params, ddof=1, axis=0)/ np.sqrt(N_MC)
+mc_std = np.std(mc_params, ddof=1, axis=0)
 
 # =====================================================
 # RÉSULTATS
