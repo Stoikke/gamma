@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy.table import Table
 from scipy.optimize import curve_fit
+import corner
 
 # =====================================================
 # PARAMÈTRES UTILISATEUR
@@ -91,8 +92,12 @@ def asym_exp_flare(t, A, t0, tau_r, tau_d):
 def multi_flare_model(t, *params):
     model = np.zeros_like(t, dtype=float)
     for i in range(N_FLARES):
-        A, t0, tr, td = params[4*i:4*i+4]
-        model += asym_exp_flare(t, A, t0, tr, td)
+        if i == 0:
+            A, t0, tr, td = params[4*i:4*i+4]
+            model += asym_exp_flare(t, A, t0, tr, tr)
+        else:
+            A, t0, tr, td = params[4*i:4*i+4]
+            model += asym_exp_flare(t, A, t0, tr, td)
     return model
 # =====================================================
 # GUESSES + BORNES  
@@ -123,13 +128,13 @@ for i in range(N_FLARES):
           f"  tau_r={p0[4*i+2]:.0f}s  tau_d={p0[4*i+3]:.0f}s")
 
 # =====================================================
-# FIT PRINCIPAL
+# FIT PRINCIPAL, maxfev=50000
 # =====================================================
 def do_fit(flux_data, flux_sigma):
     return curve_fit(
         multi_flare_model, t, flux_data,
         p0=p0, sigma=flux_sigma, absolute_sigma=True,
-        bounds=(lower_bounds, upper_bounds), maxfev=50000
+        bounds=(lower_bounds, upper_bounds),maxfev=50000
     )
 
 try:
@@ -162,26 +167,38 @@ for k in range(N_MC):
         n_ok += 1
     except Exception:
         pass
-
-valid_mc   = np.all(np.isfinite(mc_params), axis=1)
-mc_params  = mc_params[valid_mc]
+valid_mc  = np.all(np.isfinite(mc_params), axis=1)
+mc_params = mc_params[valid_mc]
 print(f"  {mc_params.shape[0]}/{N_MC} fits MC valides")
-print(len(mc_params[0]))
-# Incertitudes MC par paramètre
-mc_std = np.std(mc_params, ddof=1, axis=0)/ np.sqrt(N_MC)
+
+# Médiane et MAD par paramètre (sur les tirages MC)
+mc_median = np.median(mc_params, axis=0)
+mc_mad    = np.median(np.abs(mc_params - mc_median), axis=0)
+
+# Filtre : garder les tirages où TOUS les paramètres sont dans médiane ± 1 MAD
+bonfit = np.any(np.abs(mc_params - mc_median) < 3 * mc_mad, axis=1)  # shape (N,)
+mc_params = mc_params[bonfit]   # reste une matrice (N_valid, n_params)
+
+# Recalcul sur les tirages filtrés
+mc_median = np.median(mc_params, axis=0)
+mc_mad    = np.median(np.abs(mc_params - mc_median), axis=0)
+
+print(f"  Tirages retenus après filtre MAD : {mc_params.shape[0]}/{bonfit.size}")
+
 
 # =====================================================
 # RÉSULTATS
 # =====================================================
-print("\n========== RÉSULTATS (fit + MC) ==========")
+print("\n========== RÉSULTATS (médiane MC ± MAD) ==========")
 for i in range(N_FLARES):
-    A,  t0, tr,  td   = popt[4*i:4*i+4]
-    dA, dt0, dtr, dtd = mc_std[4*i:4*i+4]
+    A,  t0, tr,  td   = mc_median[4*i:4*i+4]
+    dA, dt0, dtr, dtd = mc_mad[4*i:4*i+4]
     print(f"\nPeak {i+1}")
-    print(f"  A      = {A:.3e}  ±  {dA:.3e}  ph cm⁻² s⁻¹  (1σ MC)")
+    print(f"  A      = {A:.3e}  ±  {dA:.3e}  ph cm⁻² s⁻¹  (MAD)")
     print(f"  t0     = {t0:.6e}  ±  {dt0:.3e}  s (MET)")
     print(f"  tau_r  = {tr:.1f}  ±  {dtr:.1f}  s")
     print(f"  tau_d  = {td:.1f}  ±  {dtd:.1f}  s")
+
 
 # =====================================================
 # PLOT

@@ -8,7 +8,7 @@ from scipy.optimize import curve_fit
 # PARAMÈTRES UTILISATEUR
 # =====================================================
 N_FLARES = 2
-N_MC     = 1000   # nombre de tirages Monte-Carlo
+N_MC     = 10000   # nombre de tirages Monte-Carlo
 
 filename       = "results_simple/lat_photon_flare1article_selected_radius4_LC_p6h.fits"
 filenames_fond = [
@@ -17,13 +17,18 @@ filenames_fond = [
     "SED_output/FOND_peak/gt_bin_activite_1_fond_3_100_20000.fits",
 ]
 
-T_MIN = 503280004+13*3600  # 5.03277224e+08
-T_MAX = 503280004+4*86400
+T_MIN = 503280004+13*3600 #503280004+13*3600  # 5.03277224e+08 activite 2 503712004
+T_MAX = 503280004+4*86400 #503280004+4*86400 qctivite 2 504403204
 PEAK_TIME_CONSTRAINTS = [
     (5.033991e+8, 5.033304e+08, 5.034909e+08),   # Peak 1
     (5.035638e+08, 5.034482e+08, 5.036444e+08),   # Peak 2
 ]
-
+# PEAK_TIME_CONSTRAINTS = [
+#      (503850244.000, 503850244.000-13.21*3600, 503850244.000+6.31*3600),   # Peak 1
+#      (503936644.000, 503936644.000-4.01*3600, 503936644.000+9.48*3600),   # Peak 2
+#      (504109444.000, 504109444.000-12.50*3600, 504109444.000+15.30*3600),   # Peak 3
+#      (504282244.000, 504282244.000-14.53*3600, 504282244.000+9.83*3600),   # Peak 4
+# ]
 # =====================================================
 # LECTURE FOND
 # =====================================================
@@ -86,7 +91,7 @@ print(f"\n{len(t)} bins | flux net : min={flux_net.min():.3e}  max={flux_net.max
 # MODÈLE
 # =====================================================
 def asym_exp_flare(t, A, t0, tau_r, tau_d):
-    return A / (np.exp((t0 - t) / tau_r) + np.exp((t - t0) / tau_d))
+    return 2*A / (np.exp((t0 - t) / tau_r) + np.exp((t - t0) / tau_d))
 
 def multi_flare_model(t, *params):
     model = np.zeros_like(t, dtype=float)
@@ -165,7 +170,18 @@ for k in range(N_MC):
 
 valid_mc   = np.all(np.isfinite(mc_params), axis=1)
 mc_params  = mc_params[valid_mc]
-print(f"  {mc_params.shape[0]}/{N_MC} fits MC valides")
+mc_median = np.median(mc_params, axis=0)
+mc_mad    = np.median(np.abs(mc_params - mc_median), axis=0)
+
+# Filtre : garder les tirages où TOUS les paramètres sont dans médiane ± 1 MAD
+# bonfit = np.all(np.abs(mc_params - np.m(mc_params, axis=0)) < 1 * np.std(mc_params, axis=0), axis=1)  # shape (N,)
+bonfit = np.all(np.abs(mc_params - mc_median) < 2 * mc_mad, axis=1)  # shape (N,)
+mc_params = mc_params[bonfit]   # reste une matrice (N_valid, n_params)
+
+# Recalcul sur les tirages filtrés
+mc_median = np.median(mc_params, axis=0)
+mc_mad    = np.median(np.abs(mc_params - mc_median), axis=0)
+print(f"  Tirages retenus après filtre MAD : {mc_params.shape[0]}/{bonfit.size}")
 
 # Incertitudes MC par paramètre
 mc_std = np.std(mc_params, ddof=1, axis=0)
@@ -175,8 +191,8 @@ mc_std = np.std(mc_params, ddof=1, axis=0)
 # =====================================================
 print("\n========== RÉSULTATS (fit + MC) ==========")
 for i in range(N_FLARES):
-    A,  t0, tr,  td   = popt[4*i:4*i+4]
-    dA, dt0, dtr, dtd = mc_std[4*i:4*i+4]
+    A,  t0, tr,  td   = mc_median[4*i:4*i+4]
+    dA, dt0, dtr, dtd = mc_mad[4*i:4*i+4]
     print(f"\nPeak {i+1}")
     print(f"  A      = {A:.3e}  ±  {dA:.3e}  ph cm⁻² s⁻¹  (1σ MC)")
     print(f"  t0     = {t0:.6e}  ±  {dt0:.3e}  s (MET)")
@@ -222,12 +238,13 @@ if fit_ok:
                 linestyle="--", linewidth=1.5, label=f"Peak {i+1}")
 print(max(t))
 ax.set_xlabel("Temps (s, MET)")
+# ax.set_ylim(0e-5,10e-5)
 ax.set_ylabel(r"Flux (ph cm$^{-2}$ s$^{-1}$)")
-# ax.set_ylim(0e-5,2.5e-5)
+
 ax.set_title(f"Courbe de lumière — {N_FLARES} peak(s), fond soustrait, MC={N_MC}")
 ax.legend(fontsize=9)
 ax.grid(True, alpha=0.3)
 
-plt.savefig("light_curve_fit_6h_MC_article.png", dpi=150, bbox_inches="tight")
+plt.savefig("light_curve_fit_6h_MC_activite_1_article.png", dpi=150, bbox_inches="tight")
 plt.show()
 print("\nFigure sauvegardée : light_curve_fit_MC.png")
