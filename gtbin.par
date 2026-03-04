@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
 # General parameters.
-evfile,        f, a, "results_simple/selected_region_9h_bin.fits", , , "Event data file name"
+evfile,        f, a, "results_simple/selected_region_activite_0_fond_2_34987.15_45000.fits", , , "Event data file name"
 scfile,        f, a, "data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits", , , "Spacecraft data file name"
-outfile,       f, a, "results_simple/gtbin_selected_region_9h_bin.fits", , , "Output file name"
+outfile,       f, a, "SED_output/gtbin/gt_bin_activite_0_fond_2_34987.15_45000.fits", , , "Output file name"
 algorithm,     s, a, "LC", CCUBE|CMAP|LC|PHA1|PHA2|HEALPIX, , "Type of output file"
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Energy binning parameters.
 ebinalg,       s, a, "LOG", FILE|LIN|LOG, , "Algorithm for defining energy bins"
-emin,          r, a, 11774.08, , , "Start value for first energy bin in MeV"
-emax,          r, a, 20000, , , "Stop value for last energy bin in MeV"
+emin,          r, a, 30, , , "Start value for first energy bin in MeV"
+emax,          r, a, 200000, , , "Stop value for last energy bin in MeV"
 enumbins,      i, a, 0, , , "Number of logarithmically uniform energy bins"
 denergy,       r, a, 0, , , "Width of linearly uniform energy bins in MeV"
 ebinfile,      f, a, "NONE", , , "Name of the file containing the energy bin definition"
@@ -19,9 +19,9 @@ ebinfile,      f, a, "NONE", , , "Name of the file containing the energy bin def
 #-------------------------------------------------------------------------------
 # Time binning parameters.
 tbinalg,       s, a, "LIN", FILE|LIN|SNR, , "Algorithm for defining time bins"
-tstart,        r, a, 503277224, , , "Start value for first time bin in MET"
-tstop,         r, a, 503660000, , , "Stop value for last time bin in MET"
-dtime,         r, a, 32400, , , "Width of linearly uniform time bins in seconds"
+tstart,        r, a, 501643824, , , "Start value for first time bin in MET"
+tstop,         r, a, 503200000, , , "Stop value for last time bin in MET"
+dtime,         r, a, 10800, , , "Width of linearly uniform time bins in seconds"
 tbinfile,      f, a, "NONE", , , "Name of the file containing the time bin definition"
 snratio,       r, a, 0, 1.e-8, , "Signal-to-noise ratio per time bin"
 lcemin,        r, a, 0, 0., , "Lower bound of energy range in MeV"

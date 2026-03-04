@@ -10,26 +10,30 @@ import argparse
 # 0. PARAMÈTRES PAR DÉFAUT
 # ==============================================================================
 
-DEFAULT_RA     = 324  #  valeur pour la source 338.1849
-DEFAULT_DEC    = -3 # -11.718641 valeur pour la source 
+DEFAULT_RA     = 324 #  valeur pour la source 338.1849
+DEFAULT_DEC    = 17 # -11.718641 valeur pour la source 
 DEFAULT_RAD    = 10 # valeurs pour la source 4
 DEFAULT_ZMAX   = 90.0
 INPUT_FITS     = "data/Photon_projet/lat_photon_weekly_all.fits"
 FT2_FILE       = "data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits"
 RESULTS_DIR    = "results_simple"
 OUTPUT_BASE_DIR = "SED_output"
-name_of_region = "activite_1_fond_3" # fond_1 à modifier pour la source ou les autres fonds 
+name_of_region = "activite_0_fond_2" # _fond_1 à modifier pour la source ou les autres fonds 
+
+# TIME_INTERVALS = [
+#     (5.03377224e+08, 5.03593224e+08, "activite_1"),
+# ]
 
 TIME_INTERVALS = [
-    (5.03377224e+08, 5.03593224e+08, "activite_1"),
+    (5.01643824E8, 503200000.0, "activite_0"),
 ]
 
-BIN_WIDTH_SEC = 2*10800
+BIN_WIDTH_SEC = 10800
 PHOTON_INDEX = -2.1
 IRFS         = "CALDB"
 SRC_MODEL    = "none"
 
-ENERGY_BINS = [(100,20000)] # à modifier pour faire les différents bins d'énergie
+# ENERGY_BINS = [(100,20000)] # à modifier pour faire les différents bins d'énergie
 #     (    100.00,     142.36),
 #     (    142.36,     202.68),
 #     (    202.68,     288.54),
@@ -46,6 +50,36 @@ ENERGY_BINS = [(100,20000)] # à modifier pour faire les différents bins d'éne
 #     (   9867.93,   14048.44),
 #     (  14048.44,   20000.00),
 # ]
+# ENERGY_BINS = [
+#     (    100.00,     163.79),
+#     (    163.79,     268.23),
+#     (    268.23,     439.37),
+#     (    439.37,     719.69),
+#     (    719.69,    1178.91),
+#     (   1178.91,    1931.11),
+#     (   1931.11,    3163.88),
+#     (   3163.88,    5182.03),
+#     (   5182.03,    8490.18),
+#     (   8490.18,   13908.03),
+#     (  13908.03,   35000.00),
+# ]
+ENERGY_BINS = [
+    (    100.00,     156.93),
+    (    156.93,     246.27),
+    (    246.27,     386.45),
+    (    386.45,     606.44),
+    (    606.44,     951.70),
+    (    951.70,    1493.29),
+    (   1493.29,    2343.21),
+    (   2343.21,    3676.37),
+    (   3676.37,    5769.50),
+    (   5769.50,    9051.19),
+    (   9051.19,   14203.71),
+    (  14203.71,   22293.49),
+    (  22293.49,   34987.15),
+    (  34987.15,   45000.00),
+]
+
 
 
 # ==============================================================================
@@ -120,7 +154,7 @@ def build_lc_and_exposure(gtselect_files: dict, prefix: str, dry_run: bool = Fal
     for (tlabel, emin, emax), ft1_file in gtselect_files.items():
         tstart, tstop, _ = next(t for t in TIME_INTERVALS if t[2] == tlabel)
 
-        lc_name = f"{prefix}_fond_3_{fmt(emin)}_{fmt(emax)}.fits" #  _{name_of_region} modifier lorsque on fait le fond ou la source
+        lc_name = f"gt_bin_{name_of_region}_{fmt(emin)}_{fmt(emax)}.fits" #   modifier lorsque on fait le fond ou la source
         lc_path = os.path.join(gtbin_dir, lc_name)
 
         print(f"\n{'='*50}")
