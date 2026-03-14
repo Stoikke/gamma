@@ -2,7 +2,7 @@
 # $Header: /nfs/slac/g/glast/ground/cvs/ScienceTools-scons/pyExposure/pfiles/gtexposure.par,v 1.5 2011/08/10 16:08:26 jchiang Exp $
 #
 
-infile,f,a,"SED_output/gtbin/gt_bin_activite_0_fond_2_34987.15_45000.fits",,,Light curve file
+infile,f,a,"SED_output/gtbin/gt_bin_activite_2_13908.03_35000.fits",,,Light curve file
 scfile,f,a,"data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits",,,Spacecraft file
 irfs,s,a,"CALDB",,,Response functions
 srcmdl,f,a,"none",,,Source model XML file

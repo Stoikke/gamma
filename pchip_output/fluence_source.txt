@@ -1,0 +1,22 @@
+# FLUENCE SOURCE — fond soustrait (moyenne 3 régions)
+
+[period1]
+  t_start        = 5.033448e+08 s
+  t_stop         = 5.035932e+08 s
+  delta_t        = 2.484000e+05 s
+  fluence        = -1.350560e-01 ± 3.02e-02 ph/cm²/s·s
+  mean_flux      = -5.684176e-07 ph/cm²/s
+  bkg_mean       = 3.116759e-06 ph/cm²/s
+  bkg_err        = 8.272668e-08 ph/cm²/s
+
+[period2]
+  t_start        = 5.040576e+08 s
+  t_stop         = 5.043384e+08 s
+  delta_t        = 2.808000e+05 s
+  fluence        = -6.284650e-01 ± 7.02e-02 ph/cm²/s·s
+  mean_flux      = -2.327648e-06 ph/cm²/s
+  bkg_mean       = 3.160487e-06 ph/cm²/s
+  bkg_err        = 1.147628e-07 ph/cm²/s
+
+[TOTAL]
+  fluence_total  = -7.635210e-01 ± 7.64e-02 ph/cm²/s·s

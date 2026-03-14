@@ -8,7 +8,7 @@ from scipy.optimize import curve_fit
 from scipy.odr import ODR, Model, RealData
 OUTPUT_BASE_DIR = "SED_output"
 OUTPUT_BASE_DIR_FOND = "SED_output/gtbin"
-activite        = "0"
+activite        = "2"
 
 gtbin_dir   = os.path.join(OUTPUT_BASE_DIR, "gtbin")
 fond_dir    = OUTPUT_BASE_DIR_FOND
