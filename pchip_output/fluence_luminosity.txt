@@ -1,34 +1,93 @@
-# FLUENCE + LUMINOSITÉ SOURCE
-# z = 1.037  |  Gamma = -1.92
-# Bande : 100 MeV – 300 GeV
+# ============================================================
+# FLUENCE + LUMINOSITÉ SOURCE — propagation incertitude sur Γ
+# ============================================================
+# z              = 1.037
+# delta (Doppler)= 22.3  [Jorstad et al. 2005]
+# Bande          : 100 MeV – 300 GeV
+#
+# Formules :
+#   F_erg = F_ph × <E>(Γ) × MEV_TO_ERG
+#   K(z,Γ) = (1+z)^(Γ-2)
+#   L_iso = 4π dL² × F_erg × K(z,Γ)
+#   L_int = L_iso / (δ⁴ × (1+z))  [Urry & Padovani 1995, PASP 107, 803]
+#   E_iso = 4π dL² × Flu_erg × K(z,Γ) / (1+z)
+#   E_int = E_iso / (δ⁴ × (1+z))
+#
+# Propagation σ(Γ) :
+#   σ²(F_erg) = (<E>×c)² σ²(F_ph) + (F_ph×c×d<E>/dΓ)² σ²(Γ)
+#   σ²(K)     = (ln(1+z)×K)² σ²(Γ)
+#   σ²(L_iso) = (4πdL²)² [K² σ²(F_erg) + F_erg² σ²(K)]
+# ============================================================
 
 [period1]
-  t_start        = 5.033268e+08 s
-  t_stop         = 5.036256e+08 s
-  delta_t        = 2.988000e+05 s
-  bkg_mean       = 2.799323e-06 ph/cm²/s
-  fluence        = 1.218975e+01 ± 2.74e-01 ph/cm²/s·s
-  mean_flux      = 4.079568e-05 ph/cm²/s
-  mean_E_photon  = 223469.39 MeV
-  F_energy       = 1.460641e-05 ± 3.29e-07 erg/cm²/s
-  fluence_energy = 4.364396e+00 ± 9.83e-02 erg/cm²
-  L_iso          = 5.389908e+51 ± 1.21e+50 erg/s
-  E_iso          = 7.906257e+56 ± 1.78e+55 erg
+  # Paramètres temporels
+  t_start          = 5.033268e+08 s
+  t_stop           = 5.036256e+08 s
+  delta_t          = 2.988000e+05 s
+
+  # Indice spectral
+  gamma            = 1.85 ± 0.1
+  K_correction     = 0.898776 ± 0.063946
+
+  # Fond
+  bkg_mean         = 3.008535e-06 ph/cm²/s
+
+  # Flux photon
+  fluence          = 1.212724e+01 ± 2.74e-01 ph/cm²
+  mean_flux        = 4.058647e-05 ph/cm²/s
+
+  # Conversion spectrale
+  mean_E_photon    = 1317.9908 MeV
+  dE_dGamma        = -4768.8115 MeV
+  F_energy         = 8.570476e-08 ± 3.11e-08 erg/cm²/s
+  fluence_energy   = 2.560858e-02 ± 9.28e-03 erg/cm²
+
+  # Luminosité isotrope : L_iso = 4pi dL^2 F_erg K(z,Gamma)
+  L_iso            = 4.663875e+50 ± 1.72e+50 erg/s
+  E_iso            = 6.841266e+55 ± 2.53e+55 erg
+
+  # Luminosité intrinsèque : L_int = L_iso / (delta^4 * (1+z))
+  # Urry & Padovani 1995, PASP 107, 803
+  delta_doppler    = 22.3
+  doppler_factor   = 5.037447e+05
+  L_int            = 9.258411e+44 ± 3.42e+44 erg/s
+  E_int            = 1.358082e+50 ± 5.02e+49 erg
 
 [period2]
-  t_start        = 5.037120e+08 s
-  t_stop         = 5.044032e+08 s
-  delta_t        = 6.912000e+05 s
-  bkg_mean       = 3.067245e-06 ph/cm²/s
-  fluence        = 2.196685e+01 ± 3.47e-01 ph/cm²/s·s
-  mean_flux      = 3.280593e-05 ph/cm²/s
-  mean_E_photon  = 223469.39 MeV
-  F_energy       = 1.174578e-05 ± 1.80e-07 erg/cm²/s
-  fluence_energy = 7.864971e+00 ± 1.24e-01 erg/cm²
-  L_iso          = 4.334306e+51 ± 6.62e+49 erg/s
-  E_iso          = 1.424767e+57 ± 2.25e+55 erg
+  # Paramètres temporels
+  t_start          = 5.037120e+08 s
+  t_stop           = 5.044032e+08 s
+  delta_t          = 6.912000e+05 s
+
+  # Indice spectral
+  gamma            = 1.92 ± 0.14
+  K_correction     = 0.944671 ± 0.094096
+
+  # Fond
+  bkg_mean         = 3.000976e-06 ph/cm²/s
+
+  # Flux photon
+  fluence          = 2.201122e+01 ± 3.47e-01 ph/cm²
+  mean_flux        = 3.287220e-05 ph/cm²/s
+
+  # Conversion spectrale
+  mean_E_photon    = 1032.7175 MeV
+  dE_dGamma        = -3455.2111 MeV
+  F_energy         = 5.439032e-08 ± 2.55e-08 erg/cm²/s
+  fluence_energy   = 3.641975e-02 ± 1.71e-02 erg/cm²
+
+  # Luminosité isotrope : L_iso = 4pi dL^2 F_erg K(z,Gamma)
+  L_iso            = 3.110949e+50 ± 1.49e+50 erg/s
+  E_iso            = 1.022627e+56 ± 4.90e+55 erg
+
+  # Luminosité intrinsèque : L_int = L_iso / (delta^4 * (1+z))
+  # Urry & Padovani 1995, PASP 107, 803
+  delta_doppler    = 22.3
+  doppler_factor   = 5.037447e+05
+  L_int            = 6.175647e+44 ± 2.96e+44 erg/s
+  E_int            = 2.030051e+50 ± 9.73e+49 erg
 
 [TOTAL]
-  fluence_total  = 3.415660e+01 ± 4.42e-01 ph/cm²/s·s
-  E_iso_total    = 2.215393e+57 ± 2.87e+55 erg
-  E_iso_total    = 2.2154e+06 × 10⁵¹ erg
+  fluence_total    = 3.413846e+01 ± 4.42e-01 ph/cm²
+  E_iso_total      = 1.706754e+56 ± 5.51e+55 erg
+  E_int_total      = 3.388133e+50 ± 1.09e+50 erg
