@@ -7,28 +7,30 @@ from scipy.optimize import curve_fit
 # =====================================================
 # PARAMÈTRES UTILISATEUR
 # =====================================================
-N_FLARES = 2
+N_FLARES = 4
 N_MC     = 10000   # nombre de tirages Monte-Carlo
 
-filename       = "results_simple/lat_photon_flare1article_selected_radius4_LC_p6h.fits"
+filename       = "results_simple/lat_photon_flare2article_selected_radius4_LC_p6h.fits"
 filenames_fond = [
-    "SED_output/FOND_peak/gt_bin_activite_1_fond_1_100_20000.fits",
-    "SED_output/FOND_peak/gt_bin_activite_1_fond_2_100_20000.fits",
-    "SED_output/FOND_peak/gt_bin_activite_1_fond_3_100_20000.fits",
+    "SED_output/FOND_peak/gtbin/gt_bin_activite_2_fond_1_100_350000.fits",
+    "SED_output/FOND_peak/gtbin/gt_bin_activite_2_fond_2_100_350000.fits",
+    "SED_output/FOND_peak/gtbin/gt_bin_activite_2_fond_3_100_350000.fits",
 ]
 
-T_MIN = 503280004+13*3600 #503280004+13*3600  # 5.03277224e+08 activite 2 503712004
-T_MAX = 503280004+4*86400 #503280004+4*86400 qctivite 2 504403204
-PEAK_TIME_CONSTRAINTS = [
-    (5.033991e+8, 5.033304e+08, 5.034909e+08),   # Peak 1
-    (5.035638e+08, 5.034482e+08, 5.036444e+08),   # Peak 2
-]
+# T_MIN = 503280004+13*3600 #503280004+13*3600  # 5.03277224e+08 activite 2 503712004
+# T_MAX = 503280004+4*86400 #503280004+4*86400 activite 2 504403204
+T_MIN = 503712004 #activite 2 
+T_MAX = 504403204 #activite 2 
 # PEAK_TIME_CONSTRAINTS = [
-#      (503850244.000, 503850244.000-13.21*3600, 503850244.000+6.31*3600),   # Peak 1
-#      (503936644.000, 503936644.000-4.01*3600, 503936644.000+9.48*3600),   # Peak 2
-#      (504109444.000, 504109444.000-12.50*3600, 504109444.000+15.30*3600),   # Peak 3
-#      (504282244.000, 504282244.000-14.53*3600, 504282244.000+9.83*3600),   # Peak 4
+#     (5.033991e+8, 5.033304e+08, 5.034909e+08),   # Peak 1
+#     (5.035638e+08, 5.034482e+08, 5.036444e+08),   # Peak 2
 # ]
+PEAK_TIME_CONSTRAINTS = [
+     (503850244.000, 503850244.000-13.21*3600, 503850244.000+6.31*3600),   # Peak 1
+     (503936644.000, 503936644.000-4.01*3600, 503936644.000+9.48*3600),   # Peak 2
+     (504109444.000, 504109444.000-12.50*3600, 504109444.000+15.30*3600),   # Peak 3
+     (504282244.000, 504282244.000-14.53*3600, 504282244.000+9.83*3600),   # Peak 4
+]
 # =====================================================
 # LECTURE FOND
 # =====================================================
@@ -245,6 +247,6 @@ ax.set_title(f"Courbe de lumière — {N_FLARES} peak(s), fond soustrait, MC={N_
 ax.legend(fontsize=9)
 ax.grid(True, alpha=0.3)
 
-plt.savefig("light_curve_fit_6h_MC_activite_1_article.png", dpi=150, bbox_inches="tight")
+plt.savefig("light_curve_fit_6h_MC_activite_2_article.png", dpi=150, bbox_inches="tight")
 plt.show()
-print("\nFigure sauvegardée : light_curve_fit_MC.png")
+print("\nFigure sauvegardée : light_curve_fit_MC_activite_2_article.png")

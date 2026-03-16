@@ -10,15 +10,15 @@ import argparse
 # 0. PARAMÈTRES PAR DÉFAUT
 # ==============================================================================
 
-DEFAULT_RA     = 338.1849#  valeur pour la source 338.1849
-DEFAULT_DEC    = 11.718641 # 11.718641 valeur pour la source 
-DEFAULT_RAD    = 4 # valeurs pour la source 4
+DEFAULT_RA     = 324#  valeur pour la source 338.1849
+DEFAULT_DEC    = -3 # 11.718641 valeur pour la source 
+DEFAULT_RAD    = 10 # valeurs pour la source 4
 DEFAULT_ZMAX   = 90.0
 INPUT_FITS     = "data/Photon_projet/lat_photon_weekly_all.fits"
 FT2_FILE       = "data/Photon_projet/spacecraft_projet/L2602050555366B2DD36C49_SC00.fits"
 RESULTS_DIR    = "results_simple"
-OUTPUT_BASE_DIR = "SED_output"
-name_of_region = "activite_2" # _fond_1 à modifier pour la source ou les autres fonds 
+OUTPUT_BASE_DIR = "SED_output/FOND_peak"
+name_of_region = "activite_2_fond_3" # _fond_1 à modifier pour la source ou les autres fonds 
 
 # TIME_INTERVALS = [
 #     (5.03377224e+08, 5.03593224e+08, "activite_1"),
@@ -53,19 +53,19 @@ SRC_MODEL    = "none"
 #     (   9867.93,   14048.44),
 #     (  14048.44,   20000.00),
 # ]
-ENERGY_BINS = [
-    (    100.00,     163.79),
-    (    163.79,     268.23),
-    (    268.23,     439.37),
-    (    439.37,     719.69),
-    (    719.69,    1178.91),
-    (   1178.91,    1931.11),
-    (   1931.11,    3163.88),
-    (   3163.88,    5182.03),
-    (   5182.03,    8490.18),
-    (   8490.18,   13908.03),
-    (  13908.03,   35000.00),
-]#activite 2 sed
+# ENERGY_BINS = [
+#     (    100.00,     163.79),
+#     (    163.79,     268.23),
+#     (    268.23,     439.37),
+#     (    439.37,     719.69),
+#     (    719.69,    1178.91),
+#     (   1178.91,    1931.11),
+#     (   1931.11,    3163.88),
+#     (   3163.88,    5182.03),
+#     (   5182.03,    8490.18),
+#     (   8490.18,   13908.03),
+#     (  13908.03,   35000.00),
+# ]#activite 2 sed
 # ENERGY_BINS = [
 #     (    100.00,     156.93),
 #     (    156.93,     246.27),
@@ -82,8 +82,8 @@ ENERGY_BINS = [
 #     (  22293.49,   34987.15),
 #     (  34987.15,   45000.00),
 # ]
-# ENERGY_BINS = [
-#     (    100.00,     300000),]
+ENERGY_BINS = [
+    (    100.00,     350000),]
 
 
 # ==============================================================================

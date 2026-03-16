@@ -214,6 +214,7 @@ def k_correction_with_err(gamma, gamma_err, redshift):
     K      = (1.0 + redshift)**(gamma - 2.0)
     dK_dG  = np.log(1.0 + redshift) * K
     K_err  = abs(dK_dG) * gamma_err
+    print(f"  ⚡ K-correction : K = {K:.6f} ± {K_err:.2e}  (dK/dΓ = {dK_dG:.6f})")
     return K, K_err
 
 # ==============================================================
@@ -315,7 +316,7 @@ def plot_all(results, outdir):
 
     fig = plt.figure(figsize=(20, 16))
     fig.suptitle("PCHIP — Source (fond soustrait) | Luminosité isotrope & intrinsèque",
-                 fontsize=14, fontweight='bold')
+                 fontsize=20, fontweight='bold')
 
     gs = gridspec.GridSpec(3, 2,
                            height_ratios=[2.5, 0.85, 0.85],
@@ -353,7 +354,7 @@ def plot_all(results, outdir):
                 f"$L_{{\\rm int}}$ = {lum['L_int']:.2e} ± {lum['L_int_err']:.1e} erg/s\n"
                 f"Fond : {r['bkg_mean']:.2e} ph/cm²/s",
                 xy=(0.02, 0.97), xycoords='axes fraction',
-                fontsize=7.5, va='top', family='monospace',
+                fontsize=10, va='top', family='monospace',
                 bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=0.85)
             )
 
@@ -361,13 +362,13 @@ def plot_all(results, outdir):
         ax.set_title(
             f"{pnum}  |  Γ = {r['gamma']} ± {r['gamma_err']}\n"
             f"Fluence = {fluence:.3e} ± {flu_err:.1e} ph/cm²",
-            fontsize=9)
-        ax.set_xlabel("Temps [s]", fontsize=9)
-        ax.set_ylabel("Flux [ph/cm²/s]", fontsize=9)
-        ax.legend(loc='upper right', fontsize=7.5)
+            fontsize=20)
+        ax.set_xlabel("Temps [s]", fontsize=20)
+        ax.set_ylabel("Flux [ph/cm²/s]", fontsize=20)
+        ax.legend(loc='upper right', fontsize=10)
         ax.grid(True, alpha=0.25)
         ax.set_xlim(time.min(), time.max())
-        ax.tick_params(labelsize=7)
+        ax.tick_params(labelsize=20)
 
     # ── Tableau luminosité ISOTROPE ───────────────────────────
     ax_iso = fig.add_subplot(gs[1, :])
@@ -404,7 +405,7 @@ def plot_all(results, outdir):
         r"$L_{\rm iso} = 4\pi\,d_L^2\,F_{\rm erg}\,K(z,\Gamma)$"
         r"    $K(z,\Gamma)=(1+z)^{\Gamma-2}$"
         f"    z={REDSHIFT}  |  {gamma_str}",
-        fontsize=9, pad=6)
+        fontsize=20, pad=6)
 
     # ── Tableau luminosité INTRINSÈQUE ────────────────────────
     ax_int = fig.add_subplot(gs[2, :])
@@ -437,7 +438,7 @@ def plot_all(results, outdir):
         r"$L_{\rm int} = L_{\rm iso}\,/\,(\delta^4\,(1+z))$"
         r"    $\sigma(L_{\rm int})$ propagée depuis $\sigma(F_{\rm ph}),\,\sigma(\Gamma)$"
         f"    δ = {DELTA_DOPPLER}  [Urry & Padovani 1995, PASP 107, 803]",
-        fontsize=9, pad=6)
+        fontsize=20, pad=6)
 
     plt.savefig(os.path.join(outdir, "pchip_source_luminosity.png"),
                 dpi=150, bbox_inches='tight')
